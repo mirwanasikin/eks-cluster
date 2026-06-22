@@ -1,0 +1,32 @@
+variables:
+  CI_PROJECT_DIR: "${CI_PROJECT_DIR}"
+
+default:
+  image: bridgecrew/checkov:latest
+  tags:
+    - ec2-amazon
+
+stages:
+  - security
+
+security:checkov:
+  stage: security
+  rules:
+    - changes:
+        - "module/**/*.tf"
+        - ".gitlab-ci.yml"
+  script:
+    - checkov
+      -d "${CI_PROJECT_DIR}/module"
+      --framework terraform
+      --soft-fail-on MEDIUM
+      --output cli
+      --output junitxml
+      --output-file-path console,checkov-report.xml
+  artifacts:
+    reports:
+      junit: checkov-report.xml
+    paths:
+      - checkov-report.xml
+    expire_in: 1 week
+    when: always
