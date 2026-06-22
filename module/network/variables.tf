@@ -28,3 +28,8 @@ variable "private_subnets" {
     az   = string
   }))
 }
+
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+}
