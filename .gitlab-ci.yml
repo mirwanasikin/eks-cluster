@@ -16,13 +16,7 @@ security:checkov:
         - "module/**/*.tf"
         - ".gitlab-ci.yml"
   script:
-    - checkov
-      -d "${CI_PROJECT_DIR}/module"
-      --framework terraform
-      --soft-fail-on MEDIUM
-      --output cli
-      --output junitxml
-      --output-file-path console,checkov-report.xml
+    - checkov -d "${CI_PROJECT_DIR}/module" --framework terraform --soft-fail-on MEDIUM --output cli --output junitxml --output-file-path .
   artifacts:
     reports:
       junit: checkov-report.xml
