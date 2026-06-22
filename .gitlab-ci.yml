@@ -1,6 +1,3 @@
-variables:
-  CI_PROJECT_DIR: "${CI_PROJECT_DIR}"
-
 default:
   tags:
     - ec2-amazon
@@ -21,8 +18,8 @@ security:checkov:
     - checkov -d "${CI_PROJECT_DIR}/module" --framework terraform --soft-fail-on MEDIUM --output cli --output junitxml --output-file-path .
   artifacts:
     reports:
-      junit: checkov-report.xml
+      junit: results_junitxml.xml
     paths:
-      - checkov-report.xml
+      - results_junitxml.xml
     expire_in: 1 week
     when: always
