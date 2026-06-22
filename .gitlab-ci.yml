@@ -2,7 +2,6 @@ variables:
   CI_PROJECT_DIR: "${CI_PROJECT_DIR}"
 
 default:
-  image: bridgecrew/checkov:latest
   tags:
     - ec2-amazon
 
@@ -11,6 +10,9 @@ stages:
 
 security:checkov:
   stage: security
+  image:
+    name: bridgecrew/checkov:latest
+    entrypoint: [""]
   rules:
     - changes:
         - "module/**/*.tf"
