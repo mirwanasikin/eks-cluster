@@ -41,7 +41,7 @@
 - [x] Complete Network Module
 - [x] Complete Backend Module
 - [x] Complete Frontend Module
-- [ ] Complete Database Module
+- [x] Complete Database Module
 - [ ] Add Module to Dev environment
 - [ ] Add Gitlab CI for Checking with Checkov
 - [ ] Add Productions environment
