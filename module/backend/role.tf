@@ -38,15 +38,13 @@ resource "aws_iam_role_policy_attachment" "eks_node_additional" {
 # IAM Role for Cluster Autoscaler
 # ------------------------------
 resource "aws_iam_role" "cluster_autoscaler" {
-  count = var.enable_cluster_autoscaler ? 1 : 0
-
   name = "${local.name_prefix}-cluster-autoscaler-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Action    = "sts:AssumeRoleWithWebIdentity"
-      Effect    = "Allow"
+      Action = "sts:AssumeRoleWithWebIdentity"
+      Effect = "Allow"
       Principal = {
         Federated = aws_iam_openid_connect_provider.eks.arn
       }
@@ -63,8 +61,6 @@ resource "aws_iam_role" "cluster_autoscaler" {
 }
 
 resource "aws_iam_policy" "cluster_autoscaler" {
-  count = var.enable_cluster_autoscaler ? 1 : 0
-
   name        = "${local.name_prefix}-cluster-autoscaler-policy"
   description = "Policy for cluster autoscaler"
 
@@ -99,8 +95,6 @@ resource "aws_iam_policy" "cluster_autoscaler" {
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_autoscaler" {
-  count = var.enable_cluster_autoscaler ? 1 : 0
-
-  policy_arn = aws_iam_policy.cluster_autoscaler[0].arn
-  role       = aws_iam_role.cluster_autoscaler[0].name
+  policy_arn = aws_iam_policy.cluster_autoscaler.arn
+  role       = aws_iam_role.cluster_autoscaler.name
 }

@@ -31,7 +31,7 @@ variable "public_subnet_ids" {
 variable "kubernetes_version" {
   description = "Kubernetes version for EKS cluster"
   type        = string
-  default     = "1.30"
+  default     = "1.33"
 }
 
 variable "instance_types" {
@@ -56,12 +56,6 @@ variable "min_capacity" {
   description = "Minimum number of worker nodes"
   type        = number
   default     = 2
-}
-
-variable "enable_cluster_autoscaler" {
-  description = "Enable cluster autoscaler addon"
-  type        = bool
-  default     = true
 }
 
 variable "enable_metrics_server" {
