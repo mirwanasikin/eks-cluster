@@ -20,10 +20,6 @@
 │   │   ├── role.tf
 │   │   ├── security.tf
 │   │   └── variables.tf
-│   ├── cdn
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
 │   ├── database
 │   │   ├── main.tf
 │   │   ├── outputs.tf
@@ -42,11 +38,10 @@
 
 ## To Do List
 
-- [ ] Complete Network Module
-- [ ] Complete Backend Module
-- [ ] Complete Frontend Module
+- [x] Complete Network Module
+- [x] Complete Backend Module
+- [x] Complete Frontend Module
 - [ ] Complete Database Module
-- [ ] Complete CDN Module
 - [ ] Add Module to Dev environment
 - [ ] Add Gitlab CI for Checking with Checkov
 - [ ] Add Productions environment
