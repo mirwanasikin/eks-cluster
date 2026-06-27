@@ -246,25 +246,3 @@ resource "aws_eks_node_group" "main" {
   })
 }
 
-# ------------------------------
-# AWS Auth ConfigMap
-# ------------------------------
-resource "kubernetes_config_map_v1_data" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-
-  data = {
-    mapRoles = jsonencode([{
-      rolearn  = aws_iam_role.eks_nodes.arn
-      username = "system:node:{{EC2PrivateDNSName}}"
-      groups = [
-        "system:bootstrappers",
-        "system:nodes"
-      ]
-    }])
-  }
-
-  depends_on = [aws_eks_cluster.main]
-}

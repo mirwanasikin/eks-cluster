@@ -65,5 +65,5 @@ output "nodes_iam_role_arn" {
 
 output "cluster_autoscaler_iam_role_arn" {
   description = "ARN of cluster autoscaler IAM role"
-  value       = var.enable_cluster_autoscaler ? aws_iam_role.cluster_autoscaler[0].arn : null
+  value       = aws_iam_role.cluster_autoscaler.arn
 }
