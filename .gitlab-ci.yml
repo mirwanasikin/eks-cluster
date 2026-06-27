@@ -4,8 +4,12 @@ default:
 
 stages:
   - security
+  - validate
 
-security:checkov:
+# -----------------------------------------------
+# Security Stage
+# -----------------------------------------------
+security:checkov:module:
   stage: security
   image:
     name: bridgecrew/checkov:latest
@@ -23,3 +27,42 @@ security:checkov:
       - results_junitxml.xml
     expire_in: 1 week
     when: always
+
+security:checkov:environment:
+  stage: security
+  image:
+    name: bridgecrew/checkov:latest
+    entrypoint: [""]
+  rules:
+    - changes:
+        - "environment/**/*.tf"
+        - "module/**/*.tf"
+        - ".gitlab-ci.yml"
+  script:
+    - checkov -d "${CI_PROJECT_DIR}/environment" --framework terraform --soft-fail-on MEDIUM --output cli --output junitxml --output-file-path .
+  artifacts:
+    reports:
+      junit: results_junitxml.xml
+    paths:
+      - results_junitxml.xml
+    expire_in: 1 week
+    when: always
+
+# -----------------------------------------------
+# Validate Stage
+# -----------------------------------------------
+validate:tofu:
+  stage: validate
+  image:
+    name: ghcr.io/opentofu/opentofu:1.12.1
+    entrypoint: [""]
+  rules:
+    - changes:
+        - "environment/**/*.tf"
+        - "module/**/*.tf"
+        - ".gitlab-ci.yml"
+  before_script:
+    - cd environment/dev
+    - tofu init -backend=false
+  script:
+    - tofu validate
