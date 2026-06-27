@@ -42,8 +42,8 @@
 - [x] Complete Backend Module
 - [x] Complete Frontend Module
 - [x] Complete Database Module
-- [ ] Add Module to Dev environment
-- [ ] Add Gitlab CI for Checking with Checkov
+- [x] Add Module to Dev environment
+- [x] Add Gitlab CI for Checking with Checkov
 - [ ] Add Productions environment
 
 ## Some information
@@ -55,5 +55,5 @@
 ## Situation
 
 - [x] Lab
-- [ ] Portfolio/Dev environment
+- [x] Portfolio/Dev environment
 - [ ] Portfolio/Productions
