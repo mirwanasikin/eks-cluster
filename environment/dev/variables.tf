@@ -121,6 +121,12 @@ variable "endpoint_public_access" {
   default     = false
 }
 
+variable "enable_vpa" {
+  description = "Enable vertical pod autoscaler addon"
+  type        = bool
+  default     = true
+}
+
 # ------------------------------
 # Database Variables
 # ------------------------------
@@ -152,6 +158,12 @@ variable "db_backup_retention_period" {
   description = "Number of days to retain backups"
   type        = number
   default     = 7
+}
+
+variable "deletion_protection" {
+  description = "Enable deletion protection"
+  type        = bool
+  default     = false
 }
 
 # ------------------------------
