@@ -13,6 +13,11 @@ variable "aws_region" {
   type        = string
 }
 
+variable "acm_certificate_arn" {
+  description = "ACM certificate ARN for CloudFront (must be us-east-1)"
+  type        = string
+}
+
 variable "gitlab_url" {
   description = "GitLab instance URL for OIDC configuration"
   type        = string

@@ -98,3 +98,43 @@ resource "aws_iam_role_policy_attachment" "cluster_autoscaler" {
   policy_arn = aws_iam_policy.cluster_autoscaler.arn
   role       = aws_iam_role.cluster_autoscaler.name
 }
+
+# ------------------------------
+# SSM Managed Instance Core
+# ------------------------------
+resource "aws_iam_role_policy_attachment" "ssm_managed_instance_core" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role       = aws_iam_role.eks_nodes.name
+}
+
+# ------------------------------
+# KMS Policy for Worker Node
+# ------------------------------
+resource "aws_iam_policy" "kms_access" {
+  #checkov:skip=CKV_AWS_290:The policy allows only the basic KMS operations required by the node. Access to specific keys is controlled by the key policy.
+  #checkov:skip=CKV_AWS_355:Wildcard resources are required for flexibility and are standard practice for basic KMS policies.
+  name        = "${local.name_prefix}-kms-access"
+  description = "Allow worker nodes to use KMS"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:GenerateDataKey",
+          "kms:DescribeKey"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = local.common_tags
+}
+
+resource "aws_iam_role_policy_attachment" "kms_access" {
+  policy_arn = aws_iam_policy.kms_access.arn
+  role       = aws_iam_role.eks_nodes.name
+}

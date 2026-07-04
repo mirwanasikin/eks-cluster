@@ -187,8 +187,9 @@ resource "aws_db_parameter_group" "main" {
   }
 
   parameter {
-    name  = "shared_preload_libraries"
-    value = "pg_stat_statements,auto_explain"
+    name         = "shared_preload_libraries"
+    value        = "pg_stat_statements,auto_explain"
+    apply_method = "pending-reboot"
   }
 
   parameter {
@@ -212,8 +213,9 @@ resource "aws_db_parameter_group" "main" {
   }
 
   parameter {
-    name  = "max_connections"
-    value = "100"
+    name         = "max_connections"
+    value        = "100"
+    apply_method = "pending-reboot"
   }
 
   tags = merge(local.common_tags, {
@@ -260,6 +262,7 @@ resource "aws_db_instance" "main" {
   #checkov:skip=CKV_AWS_129:DB subnet group uses private subnets
   #checkov:skip=CKV2_AWS_8:Parameter group configured
   #checkov:skip=CKV_AWS_157:Multi-AZ disabled for dev/portfolio, enable via var.multi_az for production
+  #checkov:skip=CKV_AWS_293:Deletion protection disabled intentionally for dev environment to allow easy cleanup
   identifier = local.name_prefix
 
   engine                              = "postgres"
@@ -318,6 +321,10 @@ resource "aws_db_instance" "main" {
     aws_security_group.rds,
     aws_iam_role_policy_attachment.rds_enhanced_monitoring
   ]
+
+  lifecycle {
+    ignore_changes = [engine_version]
+  }
 }
 
 # ------------------------------

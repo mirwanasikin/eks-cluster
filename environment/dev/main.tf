@@ -159,6 +159,7 @@ module "frontend" {
   gitlab_project_path    = var.gitlab_project_path
   cloudfront_price_class = var.cloudfront_price_class
   enable_origin_shield   = var.enable_origin_shield
+  acm_certificate_arn    = var.acm_certificate_arn
 
   tags = var.tags
 
@@ -176,44 +177,44 @@ data "aws_eks_cluster_auth" "main" {
 # ------------------------------
 # Cluster Autoscaler (Helm)
 # ------------------------------
-resource "helm_release" "cluster_autoscaler" {
-  count = var.enable_cluster_autoscaler ? 1 : 0
-
-  name       = "cluster-autoscaler"
-  repository = "https://kubernetes.github.io/autoscaler"
-  chart      = "cluster-autoscaler"
-  namespace  = "kube-system"
-  version    = "9.37.0"
-
-  set {
-    name  = "autoDiscovery.clusterName"
-    value = module.backend.cluster_name
-  }
-
-  set {
-    name  = "awsRegion"
-    value = var.aws_region
-  }
-
-  set {
-    name  = "rbac.serviceAccount.create"
-    value = "true"
-  }
-
-  set {
-    name  = "rbac.serviceAccount.name"
-    value = "cluster-autoscaler"
-  }
-
-  set {
-    name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = module.backend.cluster_autoscaler_iam_role_arn
-  }
-
-  set {
-    name  = "cloudProvider"
-    value = "aws"
-  }
-
-  depends_on = [module.backend]
-}
+# resource "helm_release" "cluster_autoscaler" {
+#   count = var.enable_cluster_autoscaler ? 1 : 0
+# 
+#   name       = "cluster-autoscaler"
+#   repository = "https://kubernetes.github.io/autoscaler"
+#   chart      = "cluster-autoscaler"
+#   namespace  = "kube-system"
+#   version    = "9.37.0"
+# 
+#   set {
+#     name  = "autoDiscovery.clusterName"
+#     value = module.backend.cluster_name
+#   }
+# 
+#   set {
+#     name  = "awsRegion"
+#     value = var.aws_region
+#   }
+# 
+#   set {
+#     name  = "rbac.serviceAccount.create"
+#     value = "true"
+#   }
+# 
+#   set {
+#     name  = "rbac.serviceAccount.name"
+#     value = "cluster-autoscaler"
+#   }
+# 
+#   set {
+#     name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+#     value = module.backend.cluster_autoscaler_iam_role_arn
+#   }
+# 
+#   set {
+#     name  = "cloudProvider"
+#     value = "aws"
+#   }
+# 
+#   depends_on = [module.backend]
+# }

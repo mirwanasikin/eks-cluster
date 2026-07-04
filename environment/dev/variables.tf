@@ -121,6 +121,12 @@ variable "endpoint_public_access" {
   default     = false
 }
 
+variable "enable_vpa" {
+  description = "Enable vertical pod autoscaler addon"
+  type        = bool
+  default     = true
+}
+
 # ------------------------------
 # Database Variables
 # ------------------------------
@@ -154,6 +160,12 @@ variable "db_backup_retention_period" {
   default     = 7
 }
 
+variable "deletion_protection" {
+  description = "Enable deletion protection"
+  type        = bool
+  default     = false
+}
+
 # ------------------------------
 # Frontend Variables
 # ------------------------------
@@ -161,6 +173,11 @@ variable "cloudfront_price_class" {
   description = "CloudFront price class"
   type        = string
   default     = "PriceClass_100"
+}
+
+variable "acm_certificate_arn" {
+  description = "ACM certificate ARN for CloudFront (must be us-east-1)"
+  type        = string
 }
 
 variable "gitlab_project_path" {

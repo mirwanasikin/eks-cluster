@@ -89,7 +89,7 @@ variable "max_allocated_storage" {
 variable "engine_version" {
   description = "PostgreSQL engine version"
   type        = string
-  default     = "16.1"
+  default     = "16.11"
 }
 
 variable "performance_insights_enabled" {
@@ -113,7 +113,7 @@ variable "enhanced_monitoring_interval" {
 variable "deletion_protection" {
   description = "Enable deletion protection"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "skip_final_snapshot" {
