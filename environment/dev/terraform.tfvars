@@ -43,6 +43,7 @@ min_capacity            = 2
 max_capacity            = 4
 endpoint_private_access = true
 endpoint_public_access  = false
+enable_vpa              = false
 
 # ------------------------------
 # Database Configuration
@@ -51,7 +52,8 @@ db_name                    = "appdb"
 db_username                = "appuser"
 db_instance_class          = "db.t3.micro"
 db_multi_az                = false
-db_backup_retention_period = 7
+db_backup_retention_period = 1
+deletion_protection        = false
 
 # ------------------------------
 # Frontend Configuration

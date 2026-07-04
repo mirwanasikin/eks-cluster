@@ -135,6 +135,29 @@ resource "aws_kms_key" "eks" {
           "kms:GenerateDataKey"
         ]
         Resource = "*"
+      },
+      {
+        Sid    = "Allow EBS Encryption via EC2"
+        Effect = "Allow"
+        Principal = {
+          AWS = "*"
+        }
+        Action = [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:GenerateDataKey*",
+          "kms:CreateGrant",
+          "kms:DescribeKey"
+        ]
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "kms:CallerAccount" = data.aws_caller_identity.current.account_id
+          }
+          StringLike = {
+            "kms:ViaService" = "ec2.${var.aws_region}.amazonaws.com"
+          }
+        }
       }
     ]
   })
@@ -205,6 +228,41 @@ resource "aws_iam_openid_connect_provider" "eks" {
   tags = local.common_tags
 }
 
+
+# ------------------------------
+# IMDSv2
+# ------------------------------
+resource "aws_launch_template" "eks_nodes" {
+  name_prefix   = "${local.name_prefix}-node-"
+  instance_type = var.instance_types[0]
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      encrypted   = true
+      volume_type = "gp3"
+      kms_key_id  = aws_kms_key.eks.arn
+    }
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = merge(local.common_tags, {
+      Name = "${local.name_prefix}-node"
+    })
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 # ------------------------------
 # EKS Node Group
 # ------------------------------
@@ -216,9 +274,12 @@ resource "aws_eks_node_group" "main" {
   node_role_arn   = aws_iam_role.eks_nodes.arn
   subnet_ids      = var.private_subnet_ids
 
-  ami_type       = "AL2_x86_64"
-  capacity_type  = "ON_DEMAND"
-  instance_types = var.instance_types
+  capacity_type = "ON_DEMAND"
+
+  launch_template {
+    id      = aws_launch_template.eks_nodes.id
+    version = aws_launch_template.eks_nodes.latest_version
+  }
 
   scaling_config {
     desired_size = var.desired_capacity
